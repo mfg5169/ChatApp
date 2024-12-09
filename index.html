@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Chat App</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #messages { list-style-type: none; padding: 0; }
+        #messages li { padding: 8px; border-bottom: 1px solid #ccc; }
+        #chat { width: 300px; margin: 20px auto; }
+        input[type="text"] { width: 100%; padding: 10px; }
+    </style>
+</head>
+<body>
+    <div id="chat">
+        <h2>Chat Room</h2>
+        <ul id="messages"></ul>
+        <input type="text" id="username" placeholder="Enter your name" />
+        <input type="text" id="message" placeholder="Enter a message" />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        const socket = new WebSocket('ws://localhost:8080/ws');
+        const messageList = document.getElementById('messages');
+        const messageInput = document.getElementById('message');
+        const usernameInput = document.getElementById('username');
+
+        // Handle incoming messages
+        socket.onmessage = function(event) {
+            const msg = JSON.parse(event.data);
+            const li = document.createElement('li');
+            li.textContent = `${msg.username}: ${msg.content}`;
+            messageList.appendChild(li);
+        };
+
+        // Send message to server
+        function sendMessage() {
+            const username = usernameInput.value || 'Anonymous';
+            const content = messageInput.value;
+
+            if (content) {
+                const msg = { username, content };
+                socket.send(JSON.stringify(msg));
+                messageInput.value = ''; // Clear the message input
+            }
+        }
+    </script>
+</body>
+</html>
