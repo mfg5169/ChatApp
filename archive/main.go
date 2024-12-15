@@ -10,7 +10,7 @@ import (
 // Define the WebSocket upgrader
 var upgrader = websocket.Upgrader{
     CheckOrigin: func(r *http.Request) bool {
-        return true // Allow connections from any origin
+        return true 
     },
 }
 
@@ -36,7 +36,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
     clients[conn] = true
     log.Println("New client connected")
 
-    // Make sure to remove the client when the connection is closed
+    //remove the client when the connection is closed
     defer func() {
         delete(clients, conn)
         conn.Close()
