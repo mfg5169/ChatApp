@@ -41,6 +41,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
         delete(clients, conn)
         conn.Close()
         log.Println("Client disconnected")
+        log.Println("Client disconnected")
     }()
 
     for {
